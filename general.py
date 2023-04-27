@@ -1,17 +1,18 @@
 import telebot
 from telebot import types
-import asyncio
+import time
 
-bot = telebot.TeleBot('TOKEN')
+bot = telebot.TeleBot('5839359620:AAH0qocuLgZNKcLqBb4TyjUc8LP59kSf7IU')
 data_users = {
     'Egor': ['bird_name', 'bird_starve', 'bird_fatigue', 'bird_mood', 'money', 'first-aid-kit', 'gladiator-kit']}
 
 
-def change_stats(message, name='asjgbuebgabeugabueg', starve=-20, fatigue=-20, mood=-5, text=''):
+def change_stats(message, name='asjgbuebgabeugabueg', starve=-20, fatigue=-20, mood=-5, money=0, text=''):
     if name != 'asjgbuebgabeugabueg': data_users[message.from_user.id][0] = name
     data_users[message.from_user.id][1] += starve
     data_users[message.from_user.id][2] += fatigue
     data_users[message.from_user.id][3] += mood
+    data_users[message.from_user.id][4] += money
     if text != '': bot.send_message(message.from_user.id, text)
 
 
@@ -81,6 +82,16 @@ def sleep(message):
 def play(message):
     if message.from_user.id in data_users:
         change_stats(message, mood=20, text='Было весело')
+    else:
+        pass
+
+
+@bot.message_handler(commands=['work'])
+def work(message):
+    if message.from_user.id in data_users:
+        bot.send_message(message.from_user.id, f'{data_users[message.from_user.id][0]} ушёл на работу. Он занят вернётся через 10 сек')
+        time.sleep(10)
+        change_stats(message, name='', starve=0, fatigue=0, mood=0, money=10, text='')
     else:
         pass
 
