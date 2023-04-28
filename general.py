@@ -4,7 +4,8 @@ import time
 
 bot = telebot.TeleBot('5839359620:AAH0qocuLgZNKcLqBb4TyjUc8LP59kSf7IU')
 data_users = {
-    'Egor': ['bird_name', 'bird_starve', 'bird_fatigue', 'bird_mood', 'money', 'first-aid-kit', 'gladiator-kit']}
+    'Egor': ['bird_name', 'bird_starve', 'bird_fatigue', 'bird_mood', 'money', 'first-aid-kit', 'gladiator-kit',
+             'on_work', 'on_fight']}
 
 
 def change_stats(message, name='asjgbuebgabeugabueg', starve=-20, fatigue=-20, mood=-5, money=0, text=''):
@@ -28,9 +29,9 @@ def start(message):
         bot.send_message(message.from_user.id, 'У тебя уже есть птичка :)\n'
                                                'Чтобы узнать список команд: /help')
     else:
-        bot.send_message(message.from_user.id, 'Если ты тут впервые, выбери имя своей птичке: /set_name\n'
+        bot.send_message(message.from_user.id, 'Если ты тут впервые, выбери имя своей птичке: /set_name {имя}\n'
                                                'Чтобы узнать список команд: /help')
-        data_users[message.from_user.id] = ['', 0, 0, 0, 0, 0, 0]
+        data_users[message.from_user.id] = ['', 0, 0, 0, 0, 0, 0, False, False]
 
 
 @bot.message_handler(commands=['help'])
@@ -89,9 +90,13 @@ def play(message):
 @bot.message_handler(commands=['work'])
 def work(message):
     if message.from_user.id in data_users:
-        bot.send_message(message.from_user.id, f'{data_users[message.from_user.id][0]} ушёл на работу. Он занят вернётся через 10 сек')
-        time.sleep(10)
-        change_stats(message, name='', starve=0, fatigue=0, mood=0, money=10, text='')
+        if data_users[message.from_user.id][7] == False:
+            bot.send_message(message.from_user.id,
+                             f'{data_users[message.from_user.id][0]} ушёл на работу. Он занят вернётся через 10 сек')
+            data_users[message.from_user.id][7] = True
+            time.sleep(10)
+            change_stats(message, name='', starve=0, fatigue=0, mood=0, money=10, text='')
+            data_users[message.from_user.id][7] = False
     else:
         pass
 
@@ -112,20 +117,11 @@ def remove(message):
 @bot.message_handler(commands=['shop'])
 def shop(message):
     if message.from_user.id in data_users:
-        bot.send_message(message.from_user.id, '1) Аптечка - 20sep /buy_first-aid-kit\n'
-                                               '2) Набор гладиатора - 40sep /buy_gladiator-kit\n'
-                                               '3) Набор еды(+500) - 15sep /buy_food-set\n'
-                                               '4) Бочка чая(+500) - 15sep /buy_barrel-of-tea\n'
-                                               '5) Набор игрушек(+500) - 15sep /buy_set-of-toys')
-    else:
-        pass
-
-
-@bot.message_handler(content_types=['text'])
-def set_name(message):
-    if message.from_user.id in data_users and '/set_name' in message.text:
-        data_users[message.from_user.id][0] = message.text[10:]
-        bot.send_message(message.from_user.id, f'Имя успешно сменено на {data_users[message.from_user.id][0]}')
+        bot.send_message(message.from_user.id, '1) Аптечка - 20sep /buy_first_aid_kit\n'
+                                               '2) Набор гладиатора - 40sep /buy_gladiator_kit\n'
+                                               '3) Набор еды(+500) - 15sep /buy_food_set\n'
+                                               '4) Бочка чая(+500) - 15sep /buy_barrel_of_tea\n'
+                                               '5) Набор игрушек(+500) - 15sep /buy_set_of_toys')
     else:
         pass
 
@@ -134,7 +130,7 @@ def set_name(message):
 
 
 # shop>
-@bot.message_handler(commands=['buy_first-aid-kit'])
+@bot.message_handler(commands=['buy_first_aid_kit'])
 def buy_first_aid_kit(message):
     if message.from_user.id in data_users:
         if data_users[message.from_user.id][4] >= 20:
@@ -145,7 +141,7 @@ def buy_first_aid_kit(message):
             bot.send_message(message.from_user.id, f'Недостаточно септимов ({data_users[message.from_user.id][4]})')
 
 
-@bot.message_handler(commands=['buy_gladiator-kit'])
+@bot.message_handler(commands=['buy_gladiator_kit'])
 def buy_gladiator_kit(message):
     if message.from_user.id in data_users:
         if data_users[message.from_user.id][4] >= 40:
@@ -159,7 +155,7 @@ def buy_gladiator_kit(message):
             bot.send_message(message.from_user.id, f'Недостаточно септимов ({data_users[message.from_user.id][4]})')
 
 
-@bot.message_handler(commands=['buy_food-set'])
+@bot.message_handler(commands=['buy_food_set'])
 def buy_food_set(message):
     if message.from_user.id in data_users:
         if data_users[message.from_user.id][4] >= 15:
@@ -170,7 +166,7 @@ def buy_food_set(message):
             bot.send_message(message.from_user.id, f'Недостаточно септимов ({data_users[message.from_user.id][4]})')
 
 
-@bot.message_handler(commands=['buy_barrel-of-tea'])
+@bot.message_handler(commands=['buy_barrel_of_tea'])
 def buy_barrel_of_tea(message):
     if message.from_user.id in data_users:
         if message.from_user.id in data_users:
@@ -182,7 +178,7 @@ def buy_barrel_of_tea(message):
                 bot.send_message(message.from_user.id, f'Недостаточно септимов ({data_users[message.from_user.id][4]})')
 
 
-@bot.message_handler(commands=['buy_set-of-toys'])
+@bot.message_handler(commands=['buy_set_of_toys'])
 def buy_set_of_toys(message):
     if message.from_user.id in data_users:
         if message.from_user.id in data_users:
@@ -192,6 +188,15 @@ def buy_set_of_toys(message):
                 bot.send_message(message.from_user.id, f'🎮 +500')
             else:
                 bot.send_message(message.from_user.id, f'Недостаточно септимов ({data_users[message.from_user.id][4]})')
+
+
+@bot.message_handler(content_types=['text'])
+def set_name(message):
+    if message.from_user.id in data_users and '/set_name' in message.text:
+        data_users[message.from_user.id][0] = message.text[10:]
+        bot.send_message(message.from_user.id, f'Имя успешно сменено на {data_users[message.from_user.id][0]}')
+    else:
+        pass
 
 
 # shop<
