@@ -90,13 +90,16 @@ def play(message):
 @bot.message_handler(commands=['work'])
 def work(message):
     if message.from_user.id in data_users:
-        if data_users[message.from_user.id][7] == False:
+        if data_users[message.from_user.id][7] == False and data_users[message.from_user.id][8] == False:
             bot.send_message(message.from_user.id,
-                             f'{data_users[message.from_user.id][0]} ушёл на работу. Он занят вернётся через 10 сек')
+                             f'{data_users[message.from_user.id][0]} ушёл на работу. Он занят вернётся через 10 сек.')
             data_users[message.from_user.id][7] = True
             time.sleep(10)
             change_stats(message, name='', starve=0, fatigue=0, mood=0, money=10, text='')
             data_users[message.from_user.id][7] = False
+        else:
+            bot.send_message(message.from_user.id,
+                             f'{data_users[message.from_user.id][0]} занят, скоро вернётся.')
     else:
         pass
 
