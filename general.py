@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 import time
 
-bot = telebot.TeleBot('5839359620:AAH0qocuLgZNKcLqBb4TyjUc8LP59kSf7IU')
+bot = telebot.TeleBot('6942944111:AAGZmxUgyWXUCX1fEVdb75D5ADdo7kBl1Gw')
 data_users = {
     'Egor': ['bird_name', 'bird_starve', 'bird_fatigue', 'bird_mood', 'money', 'first-aid-kit', 'gladiator-kit',
              'on_work', 'on_fight']}
