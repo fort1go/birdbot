@@ -5,7 +5,7 @@ import time
 bot = telebot.TeleBot('6942944111:AAGZmxUgyWXUCX1fEVdb75D5ADdo7kBl1Gw')
 data_users = {
     'Egor': ['bird_name', 'bird_starve', 'bird_fatigue', 'bird_mood', 'money', 'first-aid-kit', 'gladiator-kit',
-             'on_work', 'on_fight']}
+             'on_work', 'on_fight', 'id_of_menu_message']}
 
 
 def change_stats(message, name='asjgbuebgabeugabueg', starve=-20, fatigue=-20, mood=-5, money=0, text=''):
@@ -31,7 +31,7 @@ def start(message):
     else:
         bot.send_message(message.from_user.id, 'Если ты тут впервые, выбери имя своей птичке: /set_name {имя}\n'
                                                'Чтобы узнать список команд: /help')
-        data_users[message.from_user.id] = ['', 0, 0, 0, 0, 0, 0, False, False]
+        data_users[message.from_user.id] = ['Введите имя', 100, 100, 100, 0, 0, 0, False, False, '']
 
 
 @bot.message_handler(commands=['help'])
@@ -48,14 +48,7 @@ def help(message):
 @bot.message_handler(commands=['my_bird'])
 def my_bird(message):
     if message.from_user.id in data_users:
-        bot.send_message(message.from_user.id, 'Это твой профиль\n'
-                                               f'🐦 {data_users[message.from_user.id][0]}\n'
-                                               f'🍞 {data_users[message.from_user.id][1]}%\n'
-                                               f'💤 {data_users[message.from_user.id][2]}%\n'
-                                               f'🎮 {data_users[message.from_user.id][3]}%\n'
-                                               f'🟡 {data_users[message.from_user.id][4]}\n'
-                                               f'💊 {data_users[message.from_user.id][5]}\n'
-                                               f'🗡️🛡️ {data_users[message.from_user.id][6]}')
+        bot.edit_message_text(f'Это твой профиль\n🐦 {data_users[message.from_user.id][0]}\n🍞 {data_users[message.from_user.id][1]}%\n💤 {data_users[message.from_user.id][2]}%\n🎮 {data_users[message.from_user.id][3]}%\n🟡 {data_users[message.from_user.id][4]}\n💊 {data_users[message.from_user.id][5]}\n🗡️🛡️ {data_users[message.from_user.id][6]}', message.from_user.id, data_users[message.from_user.id][9])
     else:
         pass
 
@@ -198,6 +191,15 @@ def set_name(message):
     if message.from_user.id in data_users and '/set_name' in message.text:
         data_users[message.from_user.id][0] = message.text[10:]
         bot.send_message(message.from_user.id, f'Имя успешно сменено на {data_users[message.from_user.id][0]}')
+        data_users[message.from_user.id][9] = bot.send_message(message.from_user.id, 'Это твой профиль\n'
+                                                                                     f'🐦 {data_users[message.from_user.id][0]}\n'
+                                                                                     f'🍞 {data_users[message.from_user.id][1]}%\n'
+                                                                                     f'💤 {data_users[message.from_user.id][2]}%\n'
+                                                                                     f'🎮 {data_users[message.from_user.id][3]}%\n'
+                                                                                     f'🟡 {data_users[message.from_user.id][4]}\n'
+                                                                                     f'💊 {data_users[message.from_user.id][5]}\n'
+                                                                                     f'🗡️🛡️ {data_users[message.from_user.id][6]}').message_id
+        bot.pin_chat_message(message.from_user.id, data_users[message.from_user.id][9], True)
     else:
         pass
 
