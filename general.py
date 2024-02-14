@@ -1,12 +1,13 @@
 import telebot
 from telebot import types
 import time
+import random
 
 
 bot = telebot.TeleBot('6942944111:AAEy94IuRQ4CEPfdQ1_EEj0h0t9K9ZsIMcY')
 data_users = {
     'Egor': ['bird_name', 'bird_starve', 'bird_fatigue', 'bird_mood', 'money', 'first-aid-kit', 'gladiator-kit',
-             'on_work', 'on_fight', 'id_of_menu_message']}
+             'on_work', 'on_arena', 'id_of_menu_message']}
 
 
 def change_stats(message, name='asjgbuebgabeugabueg', starve=-20, fatigue=-20, mood=-5, money=0, text=''):
@@ -67,8 +68,46 @@ def my_bird(message):
         bot.edit_message_text(f'Это твой профиль\n🐦 {data_users[message.from_user.id][0]}\n🍞 {data_users[message.from_user.id][1]}%\n💤 {data_users[message.from_user.id][2]}%\n🎮 {data_users[message.from_user.id][3]}%\n🟡 {data_users[message.from_user.id][4]}\n💊 {data_users[message.from_user.id][5]}\n🗡️🛡️ {data_users[message.from_user.id][6]}', message.from_user.id, data_users[message.from_user.id][9])
     except telebot.apihelper.ApiTelegramException:
         pass
-
 # main menu<
+
+# arena
+@bot.message_handler(commands=['find_opponent'])
+def find_opponent(message):
+    for i in data_users:
+        if data_users[i][8] == True:
+            bot.send_message(message.from_user.id, "Противник найден, бой начался")
+            data_users[message.from_user.id][8] = True
+            data_users[i][8] = True
+            fight(message.from_user.id, i)
+            data_users[message.from_user.id][8] = False
+            data_users[i][8] = False
+            break
+    bot.send_message(message.from_user.id, "Противников не найдено")
+
+def fight(first_id, second_id):
+    log_of_fight = ''
+    rounds = 0
+    firstp = random.choice(data_users[first_id, second_id])
+    secondp = first_id if firstp != first_id else second_id
+    first_health, second_health = 100, 100
+    while first_health > 0 and second_health > 0:
+        rounds += 1
+        log_of_fight += '\n РАУНД ' + str(rounds)
+        stagelog = stage(firstp, second_health)
+        if stagelog[0] >= 
+
+def stage(player, playerhp):
+    damage = random.randint(0, 14)
+    if (a:=random.randint(0, 100) >= 85):
+        playerhp -= damage*2
+        log = f'\n {data_users[player][0]} НАНОСИТ КРИТ УРОН {damage}'
+    elif a<=15:
+        log = f'\n {data_users[player][0]} не попал'
+    else:
+        playerhp -= damage
+        log = f'\n {data_users[player][0]} наночит урон {damage}'
+    return [playerhp, log]
+
 
 # stats>
 @bot.message_handler(commands=['feed'])
