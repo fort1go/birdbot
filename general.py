@@ -3,7 +3,7 @@ from telebot import types
 import time
 import random
 
-bot = telebot.TeleBot('6942944111:AAEy94IuRQ4CEPfdQ1_EEj0h0t9K9ZsIMcY')
+bot = telebot.TeleBot('TOKEN')
 data_users = {
     'Egor': ['bird_name', 'bird_starve', 'bird_fatigue', 'bird_mood', 'money', 'first-aid-kit', 'gladiator-kit',
              'on_work', 'on_arena']}
