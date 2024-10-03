@@ -57,7 +57,7 @@ def start(message):
 
 @bot.message_handler(commands=['menu'])
 def menu(message):
-    with open('C:\\Users\\Windows\\PycharmProjects\\MineProjects3.10\\pictures\\main.jpg', 'rb') as img:
+    with open('C:\\Users\\egork\\PycharmProjects\\pythonProject\\pictures\\main.jpg', 'rb') as img:
         bot.send_photo(message.from_user.id, img)
     img.close()
     name_of_bird = ("Ваша птичка" if data_users[message.from_user.id][0] == '' else data_users[message.from_user.id][0])
@@ -115,7 +115,7 @@ def help(message):
 
 @bot.message_handler(commands=['my_bird'])
 def my_bird(message):
-    with open('C:\\Users\\Windows\\PycharmProjects\\MineProjects3.10\\pictures\\bird.png', 'rb') as img:
+    with open('C:\\Users\\egork\\PycharmProjects\\pythonProject\\pictures\\bird.png', 'rb') as img:
         bot.send_photo(message.from_user.id, img)
     img.close()
     keyboard = types.InlineKeyboardMarkup()
@@ -158,8 +158,10 @@ def switch_status(message):
 
 @bot.message_handler(commands=['find_opponent'])
 def find_opponent(message):
+    flag = True
     for i in data_users:
         if data_users[i][8] and i != message.from_user.id and i != "Egor":
+            flag = False
             bot.send_message(message.from_user.id, "Противник найден, бой начался")
             data_users[message.from_user.id][8] = True
             data_users[i][8] = True
@@ -167,7 +169,7 @@ def find_opponent(message):
             data_users[message.from_user.id][8] = False
             data_users[i][8] = False
             break
-    bot.send_message(message.from_user.id, "Противников не найдено")
+    if flag: bot.send_message(message.from_user.id, "Противников не найдено")
 
 
 def fight(first_id, second_id):
@@ -193,14 +195,14 @@ def fight(first_id, second_id):
             who_attack = True
             log_of_fight += f'\n У {data_users[firstp][0]} осталось {first_health} hp'
     log_of_fight += '\n\n КОНЕЦ БИТВЫ'
-    winner = (first_id if first_health > 0 else second_id)
-    loser = (second_id if second_health > 0 else first_id)
-    with open('C:\\Users\\Windows\\PycharmProjects\\MineProjects3.10\\pictures\\win.png', 'rb') as img:
+    winner = (firstp if first_health > 0 else secondp)
+    loser = (secondp if second_health < 0 else firstp)
+    with open('C:\\Users\\egork\\PycharmProjects\\pythonProject\\pictures\\win.png', 'rb') as img:
         bot.send_photo(winner, img)
     img.close()
     bot.send_message(winner,
                      log_of_fight + f"\n\n Поздравляю с победой. Вы получаете {data_users[loser][4] / 20 + 10}sep")
-    with open('C:\\Users\\Windows\\PycharmProjects\\MineProjects3.10\\pictures\\lose.png', 'rb') as img:
+    with open('C:\\Users\\egork\\PycharmProjects\\pythonProject\\pictures\\lose.png', 'rb') as img:
         bot.send_photo(loser, img)
     img.close()
     bot.send_message(loser,
@@ -224,7 +226,7 @@ def stage(player):
         damage *= 2
         log = f'\n {data_users[player][0]} НАНОСИТ КРИТ УРОН {damage}'
     elif a < 15:
-        log = f'\n {data_users[player][0]} не попал'
+        log = f'\n {data_users[player][0]} НЕ ПОПАЛ'
         damage = 0
     else:
         log = f'\n {data_users[player][0]} наносит урон {damage}'
@@ -236,7 +238,7 @@ def stage(player):
 def feed(message):
     if message.from_user.id in data_users:
         if not is_busy(message.from_user.id):
-            with open('C:\\Users\\Windows\\PycharmProjects\\MineProjects3.10\\pictures\\eat.png', 'rb') as img:
+            with open('C:\\Users\\egork\\PycharmProjects\\pythonProject\\pictures\\eat.png', 'rb') as img:
                 bot.send_photo(message.from_user.id, img)
             img.close()
             change_stats(message, starve=50, text='Было вкусно')
@@ -246,7 +248,7 @@ def feed(message):
 def sleep(message):
     if message.from_user.id in data_users:
         if not is_busy(message.from_user.id):
-            with open('C:\\Users\\Windows\\PycharmProjects\\MineProjects3.10\\pictures\\sleep.png', 'rb') as img:
+            with open('C:\\Users\\egork\\PycharmProjects\\pythonProject\\pictures\\sleep.png', 'rb') as img:
                 bot.send_photo(message.from_user.id, img)
             img.close()
             change_stats(message, fatigue=70, text='Птичка выспалась и готова к полёту')
@@ -256,7 +258,7 @@ def sleep(message):
 def play(message):
     if message.from_user.id in data_users:
         if not is_busy(message.from_user.id):
-            with open('C:\\Users\\Windows\\PycharmProjects\\MineProjects3.10\\pictures\\play.png', 'rb') as img:
+            with open('C:\\Users\\egork\\PycharmProjects\\pythonProject\\pictures\\play.png', 'rb') as img:
                 bot.send_photo(message.from_user.id, img)
             img.close()
             change_stats(message, mood=20, text='Было весело')
@@ -266,7 +268,7 @@ def play(message):
 def work(message):
     if message.from_user.id in data_users:
         if not is_busy(message.from_user.id):
-            with open('C:\\Users\\Windows\\PycharmProjects\\MineProjects3.10\\pictures\\work.png', 'rb') as img:
+            with open('C:\\Users\\egork\\PycharmProjects\\pythonProject\\pictures\\work.png', 'rb') as img:
                 bot.send_photo(message.from_user.id, img)
             img.close()
             bot.send_message(message.from_user.id,
